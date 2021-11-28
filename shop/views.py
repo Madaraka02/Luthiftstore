@@ -272,8 +272,8 @@ class checkoutView(View):
         form = AddressForm(self.request.POST or None)
         if form.is_valid():
 
-            mpesa_phone_number = form.cleaned_data.get('street_address')
-            mpesa_name = form.cleaned_data.get('country')
+            mpesa_phone_number = form.cleaned_data.get('mpesa_phone_number')
+            mpesa_name = form.cleaned_data.get('mpesa_name')
             delivery_address = form.cleaned_data.get('delivery_address')
 
             address = Address(
@@ -390,6 +390,7 @@ def lipa_na_mpesa_online(request):
     order = Order.objects.get(user=request.user, ordered=False)
     # remove "+" from customer's phone number
     phone = str(order.address.mpesa_phone_number).translate({ord('+'): None})
+
     access_token = MpesaAccessToken.validated_mpesa_access_token
     api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     headers = {"Authorization": "Bearer %s" % access_token}
