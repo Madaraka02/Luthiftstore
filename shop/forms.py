@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-# from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.phonenumber import PhoneNumber
 from shop.models import *
 
@@ -26,3 +26,8 @@ class AddressForm(forms.Form):
     mpesa_phone_number = PhoneNumber.from_string(phone_number=raw_phone, region='KE').as_e164
     mpesa_name = forms.CharField(required=False)
     delivery_address = forms.CharField(required=False)
+
+class DeliveryForm(ModelForm):
+    class Meta:
+        model = Address
+        fields = ('mpesa_phone_number', 'mpesa_name', 'delivery_address')    

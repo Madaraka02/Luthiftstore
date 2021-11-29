@@ -269,7 +269,7 @@ class checkoutView(View):
 
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
-        form = AddressForm(self.request.POST or None)
+        form = DeliveryForm(self.request.POST or None)
         if form.is_valid():
 
             mpesa_phone_number = form.cleaned_data.get('mpesa_phone_number')
