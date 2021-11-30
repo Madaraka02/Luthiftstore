@@ -10,7 +10,8 @@ from django.core.validators import RegexValidator
 class Customer(models.Model):
     user = models.OneToOneField(User, null=False, blank=False, on_delete=models.CASCADE)
     # CUSTOM FIELD
-    phone_number = models.CharField(max_length=20, blank=False, null=False)
+    # phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+254700000000'. Up to 15 digits allowed.")
+    # phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True) 
 
     def __str__(self):
         return self.user.username
@@ -105,7 +106,9 @@ class Order(models.Model):
 
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    mpesa_phone_number =  PhoneNumberField(null=True)
+    # phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+254700000000'. Up to 15 digits allowed.")
+    # mpesa_phone_number = models.CharField(validators=[phone_regex], max_length=17, null=True) 
+    mpesa_phone_number = PhoneNumberField(null=True)
     mpesa_name = models.CharField(max_length=500, null=True)
     delivery_address = models.CharField(max_length=500, null=True)
 
@@ -130,3 +133,9 @@ class Payment(models.Model):
 
     def __str__(self):
         return self.user.username     
+
+
+
+
+
+

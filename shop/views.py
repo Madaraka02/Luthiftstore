@@ -260,7 +260,7 @@ def remove_single_item_from_cart(request, slug):
 class checkoutView(View):
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
-        form = AddressForm()
+        form = DeliveryForm()
         context = {
             'form': form,
             'order': order,
@@ -271,16 +271,17 @@ class checkoutView(View):
         order = Order.objects.get(user=self.request.user, ordered=False)
         form = DeliveryForm(self.request.POST or None)
         if form.is_valid():
+            deliver = form.save(commit=False)
 
-            mpesa_phone_number = form.cleaned_data.get('mpesa_phone_number')
-            mpesa_name = form.cleaned_data.get('mpesa_name')
-            delivery_address = form.cleaned_data.get('delivery_address')
+            # mpesa_phone_number = form.cleaned_data.get('mpesa_phone_number')
+            # mpesa_name = form.cleaned_data.get('mpesa_name')
+            # delivery_address = form.cleaned_data.get('delivery_address')
 
             address = Address(
                 user = self.request.user,
-                mpesa_phone_number = mpesa_phone_number,
-                mpesa_name = mpesa_name,
-                delivery_address = delivery_address,
+                mpesa_phone_number = deliver.mpesa_phone_number,
+                mpesa_name = deliver.mpesa_name,
+                delivery_address = deliver.delivery_address,
             )
             address.save()
             order.address = address
@@ -398,7 +399,7 @@ def lipa_na_mpesa_online(request):
         "BusinessShortCode": LipanaMpesaPpassword.Business_short_code,
         "Password": LipanaMpesaPpassword.decode_password,
         "Timestamp": LipanaMpesaPpassword.lipa_time,
-        "TransactionType": "CustomerPayBillOnline",
+        "TransactionType": "CustomerPayBillOnline", #CustomerBuyGoodsOnline
         "Amount": int(order.get_total()), 
         "PartyA": int(phone),  # replace with your phone number to get stk push...convert phone number to integer
         "PartyB": LipanaMpesaPpassword.Business_short_code,
